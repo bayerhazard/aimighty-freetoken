@@ -1,0 +1,7 @@
+apiVersion: v2
+appVersion: 26.9.1
+description: Qwen3.6-35B-A3B MoE chat via FreeToken (edge-native MoE offload) — ~3B
+  active, 200K context, 2 parallel requests
+name: aimqwen3635bft
+type: application
+version: 26.9.1

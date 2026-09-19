@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aimqwen3635bft-env
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aimqwen3635bft
+    app.kubernetes.io/managed-by: Helm
+data:
+  MODEL_REPO: "{{ .Values.env.MODEL_REPO }}"
+  SERVED_MODEL_NAME: "{{ .Values.env.SERVED_MODEL_NAME }}"
+  MOE_STRATEGY: "{{ .Values.env.MOE_STRATEGY }}"
+  MOE_CACHE_SIZE: "{{ .Values.env.MOE_CACHE_SIZE }}"
+  MEMORY_RATIO: "{{ .Values.env.MEMORY_RATIO }}"
+  NUM_TOKENS: "{{ .Values.env.NUM_TOKENS }}"
+  MAX_RUNNING_REQUESTS: "{{ .Values.env.MAX_RUNNING_REQUESTS }}"
+  CUDA_GRAPH_MAX_BS: "{{ .Values.env.CUDA_GRAPH_MAX_BS }}"
+  ATTENTION_BACKEND: "{{ .Values.env.ATTENTION_BACKEND }}"
+  PLE_BACKEND: "{{ .Values.env.PLE_BACKEND }}"
+  EXTRA_ARGS: "{{ .Values.env.EXTRA_ARGS }}"

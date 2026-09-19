@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aimqwen3635bft
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: aimqwen3635bft
+    io.kompose.service: aimqwen3635bft
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: "1919"
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
+    protocol: TCP
+  selector:
+    io.kompose.service: aimqwen3635bft

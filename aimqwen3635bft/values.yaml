@@ -1,0 +1,74 @@
+workloads:
+  aimqwen3635bft:
+    replicaCount: 1
+
+image:
+  repository: ghcr.io/bayerhazard/freetoken
+  tag: 26.9.1
+  full: "ghcr.io/bayerhazard/freetoken:26.9.1"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: aimqwen3635bft
+
+service:
+  type: ClusterIP
+  port: 1919
+
+resources:
+  limits:
+    cpu: 16
+    memory: 40Gi
+    nvidia.com/gpu: 1
+  requests:
+    cpu: 4
+    memory: 24Gi
+    nvidia.com/gpu: 1
+
+# FreeToken serving configuration (rendered into the ConfigMap).
+env:
+  MODEL_REPO: "nvidia/Qwen3.6-35B-A3B-NVFP4"
+  SERVED_MODEL_NAME: "Qwen3.6-35B-A3B"
+  MOE_STRATEGY: "offload"
+  MOE_CACHE_SIZE: "8800"
+  MEMORY_RATIO: "0.95"
+  NUM_TOKENS: "200000"
+  MAX_RUNNING_REQUESTS: "2"
+  CUDA_GRAPH_MAX_BS: "2"
+  ATTENTION_BACKEND: "triton"
+  PLE_BACKEND: "pinned"
+  # Extra flags appended verbatim to the ft serve command.
+  EXTRA_ARGS: "--text-model-only --moe-prefill-hit-d2d --enable-special-token-ckpt"
+
+# Olares-injected environment variables (from OlaresManifest envs:).
+# Default present so standalone `helm template` renders without nil pointer;
+# Olares overrides this at install time.
+olaresEnv:
+  HF_TOKEN: ""
+
+runtimeClassName: nvidia
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+persistence:
+  models:
+    enabled: true
+    size: 30Gi
+
+probes:
+  startup:
+    path: /health
+    port: 1919
+    failureThreshold: 720
+    periodSeconds: 30
+    initialDelaySeconds: 60
+    timeoutSeconds: 10
+  liveness:
+    path: /health
+    port: 1919
+    failureThreshold: 5
+    periodSeconds: 30
+    initialDelaySeconds: 600
+    timeoutSeconds: 10
