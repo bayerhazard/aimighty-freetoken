@@ -11,11 +11,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential curl ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m venv /opt/freetoken/venv
+RUN pip install --no-cache-dir uv
+RUN uv venv --python 3.12 /opt/freetoken/venv
 ENV PATH=/opt/freetoken/venv/bin:$PATH
 
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir \
+RUN uv pip install --no-cache-dir \
         "freetoken[accel] @ ${FT_RUNTIME_WHEEL}" \
         "${FT_KERNEL_WHEEL}" \
         "nvidia-cuda-nvcc==13.4.92" \
