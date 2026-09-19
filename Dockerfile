@@ -18,12 +18,17 @@ ENV PATH=/opt/freetoken/venv/bin:$PATH
 RUN uv pip install --no-cache-dir \
         "freetoken[accel] @ ${FT_RUNTIME_WHEEL}" \
         "${FT_KERNEL_WHEEL}" \
+        ninja \
+        huggingface_hub
+
+# The CUDA 13.4 compiler/headers/toolchain, installed separately with --no-deps:
+# torch 2.11 pins nvidia-cuda-runtime==13.0.96, so a single resolving install
+# cannot also pin the 13.4 toolchain. --no-deps mirrors the validated host setup.
+RUN uv pip install --no-cache-dir --no-deps \
         "nvidia-cuda-nvcc==13.4.92" \
         "nvidia-cuda-crt==13.4.92" \
         "nvidia-cuda-runtime==13.4.92" \
-        "nvidia-nvvm==13.4.92" \
-        ninja \
-        huggingface_hub
+        "nvidia-nvvm==13.4.92"
 
 # Build a CUDA_HOME from the pip CUDA wheels (mirrors the validated host setup).
 # The libcuda stub symlink is (re)pointed at runtime by the entrypoint.
